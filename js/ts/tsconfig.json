@@ -1,0 +1,173 @@
+{
+  "files": [],          // default: не задан (используется include) | явный список файлов для компиляции
+  "include": ["src/**/*.ts"],  // default: ["**/*"] если не задан files | паттерны glob для включения файлов
+  "exclude": ["node_modules", "bower_components", "jspm_packages"], // default: эти 3 + outDir | паттерны glob для исключения
+  "extends": "",        // default: не задан | путь к базовому tsconfig для наследования настроек
+  "references": [],     // default: не задан | ссылки на подпроекты для монорепозитория
+  "compilerOptions": {
+    // ✅ TYPE CHECKING
+    
+    // ⭐ ВАЖНО
+    "strict": true,                          // default: false | мета-флаг, включающий сразу 8 строгих проверок ниже
+    "strictNullChecks": true,                // default: false (true если strict) | null/undefined становятся отдельными типами, не присваиваются без проверки
+    "noImplicitAny": true,                   // default: false (true если strict) | запрещает неявный тип any, нужна явная аннотация
+    "strictFunctionTypes": true,             // default: false (true если strict) | контравариантная проверка типов параметров функций
+    "strictBindCallApply": true,             // default: false (true если strict) | строгая проверка типов аргументов .bind(), .call(), .apply()
+    "strictPropertyInitialization": true,    // default: false (true если strict) | все свойства класса должны быть инициализированы в конструкторе
+    "strictBuiltinIteratorReturn": true,     // default: false (true если strict) | TReturn встроенных итераторов становится undefined вместо any
+    "alwaysStrict": true,                    // default: false (true если strict) | добавляет "use strict" в каждый скомпилированный файл
+    "useUnknownInCatchVariables": true,      // default: false (true если strict) | catch(e) получает тип unknown вместо any
+    "noImplicitThis": true,                  // default: false (true если strict) | запрещает this с неявным типом any вне классов
+
+    // ⭐ ВАЖНО
+    "noUnusedLocals": true,                  // default: false | ошибка при объявленных, но не используемых локальных переменных
+    "noUnusedParameters": true,              // default: false | ошибка при объявленных, но не используемых параметрах функций
+    "noImplicitReturns": true,               // default: false | все ветки функции должны явно возвращать значение
+    "noFallthroughCasesInSwitch": true,      // default: false | запрещает проваливание из case в case без break/return/throw
+
+    "exactOptionalPropertyTypes": true,      // default: false | строго различает a?: T (отсутствует) и a: T | undefined (есть, но undefined)
+    "noUncheckedIndexedAccess": true,        // default: false | arr[0] и obj[key] получают тип T | undefined, т.к. элемент может не существовать
+    "noImplicitOverride": false,             // default: false | требует явного ключевого слова override при переопределении метода родителя
+    "noPropertyAccessFromIndexSignature": false, // default: false | запрещает obj.key если тип задан через index signature, нужно obj["key"]
+    "allowUnreachableCode": false,           // default: undefined (предупреждение) | false = ошибка на недостижимый код, true = игнорировать
+    "allowUnusedLabels": false,              // default: undefined (предупреждение) | false = ошибка на неиспользуемые метки label:, true = игнорировать
+    
+    // 📦 MODULES
+    
+    // ⭐ ВАЖНО
+    "module": "ESNext",             // default: CommonJS (target ES3/ES5), ES6 (target ES6+) | формат генерируемых модулей: CommonJS, ESNext, ES2022, NodeNext, Preserve
+    "moduleResolution": "Bundler",  // default: node (CommonJS), node16/nodenext (NodeNext) | алгоритм поиска модулей: node, node16, nodenext, bundler, classic
+    "baseUrl": "src",               // default: не задан | корень для не-относительных импортов, при "src" можно писать import Foo from "components/Foo"
+    "paths": {                      // default: не задан | алиасы импортов на реальные пути, работает совместно с baseUrl
+      "@/shared/*": ["shared/*"]
+    },
+    "resolveJsonModule": true,      // default: false | разрешает импортировать .json-файлы с автоматической типизацией структуры
+    "typeRoots": [],                // default: ["node_modules/@types"] | директории для поиска пакетов с типами
+    "types": [],                    // default: все из @types | явный список @types-пакетов, остальные игнорируются
+
+    "allowArbitraryExtensions": false,          // default: false | импорт файлов с нестандартными расширениями (.css, .svg) при наличии .d.ts
+    "allowImportingTsExtensions": true,         // default: false | разрешает .ts/.tsx/.mts в импортах, требует noEmit или emitDeclarationOnly
+    "allowUmdGlobalAccess": true,               // default: false | обращение к UMD-модулям как к глобальным переменным из модульных файлов
+    "customConditions": [],                     // default: не задан | доп. условия для поля exports/imports в package.json при резолюции пакетов
+    "moduleSuffixes": [],                       // default: не задан | суффиксы для перебора при резолюции (например, [".ios", ""] для React Native)
+    "noResolve": true,                          // default: false | отключает авто-добавление файлов через /// <reference> и import
+    "noUncheckedSideEffectImports": true,       // default: false | ошибка для import "module" если модуль не найден
+    "resolvePackageJsonExports": true,          // default: true для node16/nodenext/bundler | использует поле exports из package.json
+    "resolvePackageJsonImports": true,          // default: true для node16/nodenext/bundler | использует поле imports из package.json
+    "rewriteRelativeImportExtensions": true,    // default: false | переписывает расширения в относительных импортах при эмите (.ts → .js)
+    "rootDir": "src",                           // default: общий корень всех входных файлов | корневая директория исходников, влияет на структуру outDir
+    "rootDirs": [],                             // default: не задан | несколько директорий как единый виртуальный корень (генерируемые + исходники)
+    
+    // 📤 EMIT
+
+    // ⭐ ВАЖНО
+    "outDir": "dist",               // default: не задан (рядом с исходниками) | директория для скомпилированных файлов
+    "declaration": true,            // default: false (true если composite) | генерирует .d.ts-файлы, обязательно для библиотек
+    "sourceMap": true,              // default: false | генерирует .map-файлы для отладки TS через браузер/Node.js
+    "noEmit": false,                // default: false | только проверка типов без генерации файлов, когда сборку делает другой инструмент
+
+    "declarationDir": "types",      // default: не задан (рядом с .js) | отдельная директория для всех .d.ts-файлов
+    "declarationMap": true,         // default: false | source maps для .d.ts, позволяет IDE переходить к исходному .ts из деклараций
+    "emitDeclarationOnly": false,   // default: false | только .d.ts без JS, когда сборку JS делает esbuild/swc/babel
+    "importHelpers": true,          // default: false | импортирует хелперы (__extends, __awaiter) из tslib вместо дублирования в каждом файле
+    "downlevelIteration": false,    // default: false | корректный (но объёмный) код для for...of и spread при target ES5/ES3
+    "removeComments": false,        // default: false | удаляет все комментарии из генерируемых JS-файлов
+    "noEmitOnError": true,          // default: false | не генерирует файлы если есть ошибки типов
+    "emitBOM": false,               // default: false | добавляет BOM в начало файлов, редко нужен (совместимость с Windows-инструментами)
+    "inlineSourceMap": false,       // default: false | встраивает source map в JS как base64-комментарий вместо отдельного .map
+    "inlineSources": false,         // default: false | встраивает исходный TS-код в source map
+    "mapRoot": "",                  // default: не задан | переопределяет URL к .map-файлам в сгенерированном JS
+    "newLine": "lf",                // default: зависит от ОС | символ конца строки: crlf (Windows) или lf (Unix)
+    "noEmitHelpers": false,         // default: false | не генерирует хелперы, предполагается ручное подключение или importHelpers
+    "outFile": "",                  // default: не задан | объединяет всё в один JS-файл, только для module: None/System/AMD
+    "preserveConstEnums": false,    // default: false (true если isolatedModules) | сохраняет const enum как объекты вместо инлайнинга
+    "sourceRoot": "",               // default: не задан | переопределяет путь к .ts-файлам в source map для дебаггера
+    "stripInternal": false,         // default: false | исключает из .d.ts декларации помеченные @internal в JSDoc
+    
+    // 🟨 JAVASCRIPT SUPPORT
+    "allowJs": false,               // default: false | включает .js/.jsx файлы в компиляцию вместе с .ts
+    "checkJs": false,               // default: false | проверка типов для .js-файлов по JSDoc (требует allowJs)
+    "maxNodeModuleJsDepth": 0,      // default: 0 | глубина поиска .js в node_modules для вывода типов (при allowJs)
+
+    // 🖥 EDITOR SUPPORT
+    "disableSizeLimit": false,      // default: false | снимает лимит ~20 МБ на размер проекта в языковом сервере IDE
+    "plugins": [],                  // default: не задан | плагины языкового сервера для IDE, не влияют на компиляцию
+    
+    // 🔗 INTEROP CONSTRAINTS
+
+    // ⭐ ВАЖНО
+    "esModuleInterop": true,                     // default: false | совместимость CJS и ESM: import X from "cjs-module", включает allowSyntheticDefaultImports
+    "forceConsistentCasingInFileNames": true,     // default: false | запрещает импорты отличающиеся от имени файла только регистром (важно на Linux)
+    "verbatimModuleSyntax": true,                // default: false | import type обязателен для типов, заменяет isolatedModules + importsNotUsedAsValues
+    "isolatedModules": true,                     // default: false | каждый файл — самодостаточный модуль, совместимость с Babel/esbuild/swc
+
+    "allowSyntheticDefaultImports": true,        // default: false (true если esModuleInterop) | import X from модуля без default export
+    "erasableSyntaxOnly": false,                 // default: false | запрещает конструкции нельзя просто удалить: const enum, namespace с логикой
+    "isolatedDeclarations": false,               // default: false | явные аннотации публичного API для параллельной генерации .d.ts
+    "preserveSymlinks": false,                   // default: false | не разрешает симлинки до реального пути (аналог --preserve-symlinks в Node.js)
+
+    // 🌐 LANGUAGE AND ENVIRONMENT
+
+    // ⭐ ВАЖНО
+    "target": "ES2022",             // default: ES3 | версия JS на выходе: ES3, ES5, ES2015..ES2024, ESNext — определяет что будет даунлевелировано
+    "lib": ["ES2022", "DOM"],       // default: зависит от target | встроенные библиотеки типов: ES2022, DOM, DOM.Iterable и др.
+    "jsx": "react-jsx",             // default: не задан | обработка JSX: preserve, react, react-jsx, react-jsxdev, react-native
+
+    "experimentalDecorators": false,    // default: false | декораторы старого стиля Stage 2 (для NestJS, TypeORM и др.)
+    "emitDecoratorMetadata": false,     // default: false | метаданные типов для декораторов через Reflect.metadata (требует experimentalDecorators)
+    "jsxFactory": "React.createElement",// default: React.createElement | функция вместо createElement при jsx: "react" (например h для Preact)
+    "jsxFragmentFactory": "Fragment",   // default: React.Fragment | компонент для фрагментов <></>, например Fragment для Preact
+    "jsxImportSource": "react",         // default: react | пакет JSX runtime при jsx: "react-jsx", например "preact" или "solid-js"
+    "libReplacement": true,             // default: true | замена стандартных lib-файлов кастомными через @typescript/lib-* в node_modules
+    "moduleDetection": "auto",          // default: auto | определение файл-модуль или скрипт: auto, legacy, force
+    "noLib": false,                     // default: false | отключает стандартные lib.d.ts, для полностью кастомного окружения
+    "useDefineForClassFields": true,    // default: true (target ES2022+), false (ES2021-) | Object.defineProperty для полей класса вместо присваивания
+
+    // 🔍 COMPILER DIAGNOSTICS
+    "diagnostics": false,           // default: false | расширенная инфо о производительности компилятора (время, память)
+    "explainFiles": false,          // default: false | вывод причины включения каждого файла в компиляцию
+    "extendedDiagnostics": false,   // default: false | детальная диагностика с разбивкой по фазам компиляции
+    "generateCpuProfile": "",       // default: не задан | путь к файлу CPU profile для профилировщика
+    "generateTrace": "",            // default: не задан | трассировочный файл для анализа через Chrome DevTools
+    "listEmittedFiles": false,      // default: false | список всех сгенерированных файлов после компиляции
+    "listFiles": false,             // default: false | список всех файлов включённых в компиляцию
+    "noCheck": false,               // default: false | пропускает проверку типов, только эмит, для параллельных процессов
+    "traceResolution": false,       // default: false | подробный лог резолюции каждого модуля, помогает найти почему модуль не найден
+
+    // 🏗 PROJECTS
+    "composite": false,                          // default: false | проект — часть multi-project билда, требует declaration: true и tsc --build
+    "incremental": true,                         // default: false (true если composite) | инкрементальная компиляция через .tsbuildinfo-файл
+    "tsBuildInfoFile": ".tsbuildinfo",           // default: .tsbuildinfo рядом с outDir | путь к файлу инкрементальной компиляции
+    "disableReferencedProjectLoad": false,       // default: false | не загружать referenced-проекты при открытии в IDE, ускоряет монорепо
+    "disableSolutionSearching": false,           // default: false | отключает поиск tsconfig с references при навигации в IDE
+    "disableSourceOfProjectReferenceRedirect": false, // default: false | использовать .d.ts вместо .ts при навигации из зависимых проектов
+
+    // 🖨 OUTPUT FORMATTING
+    "noErrorTruncation": false,     // default: false | отключает обрезание длинных ошибок, полезно при отладке сложных дженериков
+    "preserveWatchOutput": false,   // default: false | не очищает консоль между пересборками в --watch режиме
+    "pretty": true,                 // default: true (если терминал поддерживает) | цветной и форматированный вывод ошибок
+
+    // ✔️ COMPLETENESS
+
+    // ⭐ ВАЖНО
+    "skipLibCheck": true,           // default: false | пропускает проверку типов всех .d.ts (node_modules), ускоряет сборку и избегает конфликтов
+    "skipDefaultLibCheck": false    // default: false | пропускает проверку только стандартных lib.*.d.ts TypeScript, более узкий вариант skipLibCheck
+  },
+  // 👁 WATCH OPTIONS
+  "watchOptions": {
+    "watchFile": "useFsEvents",              // default: useFsEvents | стратегия отслеживания файлов: fixedPollingInterval, priorityPollingInterval, dynamicPriorityPolling, useFsEvents, useFsEventsOnParentDirectory
+    "watchDirectory": "useFsEvents",         // default: useFsEvents | стратегия отслеживания директорий: fixedPollingInterval, dynamicPriorityPolling, useFsEvents
+    "fallbackPolling": "dynamicPriority",    // default: dynamicPriority | запасная стратегия поллинга если нативные fs-события недоступны
+    "synchronousWatchDirectory": false,      // default: false | синхронная обработка изменений директорий без дебаунса
+    "excludeDirectories": [],                // default: не задан | директории исключённые из наблюдения watcher, снижает нагрузку
+    "excludeFiles": [],                      // default: не задан | конкретные файлы исключённые из наблюдения
+    "assumeChangesOnlyAffectDirectDependencies": false // default: false | пересобирать только прямых зависимых, ускоряет watch за счёт возможных пропусков
+  },
+  // 🔄 TYPE ACQUISITION
+  "typeAcquisition": {
+    "enable": false,                              // default: false (true в JS-проектах без tsconfig) | авто-получение типов для JS-проектов
+    "include": ["jquery"],                        // default: не задан | пакеты для которых нужно автоматически получить типы
+    "exclude": ["react"],                         // default: не задан | пакеты для которых не нужно получать типы
+    "disableFilenameBasedTypeAcquisition": false  // default: false | отключает определение нужных типов по именам файлов (jquery.js → @types/jquery)
+  }
+}
