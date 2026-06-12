@@ -9,12 +9,26 @@ fmt.Sprint("suck", "suck") // склеивает аргументы и возв�
 fmt.Sprintf("%s %d", "suck", 20) // принимает шаблон и аргументы подстановки по порядку и возвращает строку
 fmt.Sprintln("suck", "suck") // склеивает аргументы с переносом строки и пробелами, и возвращает строку
 
-
 fmt.Fprint(w, "suck")        // пишет в io.Writer
 fmt.Fprintf(w, "%s %d", "suck", 42) // пишет в io.Writer с форматированием
 fmt.Fprintln(w, "suck") // пишет в io.Writer с переносом строки и пробелами
+// Fprint — это Print но выводит не в консоль, а в любой io.Writer — файл, буфер, сеть и т.д.
+
+var a, b int
+fmt.Scan(&a, &b) // ввод из консоли
+
+x := make([]int, 5)
+for i := 0; i < 5; i++ {
+  fmt.Scan(&floorNumbers[i])
+} // ввод из консоли в срез фиксированной величины
+
+var x []int
+for i := 0; i < n; i++ {
+	var v int
+	fmt.Scan(&v)
+	x = append(x, v)
+} // ввод из консоли в срез с расширением
 ```
-Fprint — это Print но выводит не в консоль, а в любой io.Writer — файл, буфер, сеть и т.д.
 
 Классификаторы:
 ```go
